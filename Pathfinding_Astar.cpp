@@ -82,7 +82,7 @@ class ImportantInfo
 		NodeCoords getPlayer() { return player; }
 		NodeCoords getGoal() { return goal; }
 		bool getPlayerOnGoal() { return playerOnGoal; }
-
+		int getGoalCount() { return goals.size(); }
 	private:
 		NodeCoords player;
 		NodeCoords goal;
@@ -102,21 +102,16 @@ int main(int argc, char *argv[])
 
 	
 	map = getMap(info);
-
-	
-	for (int i = 0; i < map.size(); i++)
-
-	{
-		for (int j = 0; j < map[i].size(); j++)
-			std::cout << map[i][j]; 
-		std::cout << std::endl;
-	}
-
 	
 	//check if the player or a box was found on the goal
 	if (info.getPlayerOnGoal())
 	{
 		std::cout << std::endl;
+		return 0;
+	}
+	else if (info.getGoalCount() == 0)
+	{
+		std::cout << "no path" << std::endl;
 		return 0;
 	}
 
@@ -202,7 +197,6 @@ std::string Astar(std::vector<std::vector<char>> map, ImportantInfo &info)
 	char movementOperators[4] = { 'D','U','R','L' };
 
 	info.useClosestGoal(info.getPlayer());
-	std::cout << "\nGOAL: " << info.getGoal().getX() << " " << info.getGoal().getY() << std::endl;
 
 	openCoordinates.push_back(new NodeCoords(info.getPlayerX(), info.getPlayerY()));
 	fScores.push_back(calcScore(*openCoordinates[0], info.getPlayer(), info.getGoal()));
