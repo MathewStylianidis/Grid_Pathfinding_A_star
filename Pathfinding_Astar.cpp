@@ -8,8 +8,8 @@ class NodeCoords;
 class ImportantInfo;
 
 int min_element_index(std::vector<int> vec);
-int calcManhattan(NodeCoords &, NodeCoords &);
-int calcScore(NodeCoords &, NodeCoords &, NodeCoords &);
+int calcManhattan(const NodeCoords &, const NodeCoords &);
+int calcScore(const NodeCoords &, const NodeCoords &, const NodeCoords &);
 std::vector<std::vector<char>> &getMap(ImportantInfo &);
 std::string Astar(std::vector<std::vector<char>>, ImportantInfo &);
 
@@ -18,8 +18,8 @@ class NodeCoords
 
 	public:
 	
-		NodeCoords::NodeCoords() : x(-1),y(-1) {}
-		NodeCoords::NodeCoords(int x, int y) : x(x), y(y) {}
+		NodeCoords() : x(-1),y(-1) {}
+		NodeCoords(int x, int y) : x(x), y(y) {}
 
 		bool operator==(const NodeCoords &coords)
 		{
@@ -36,8 +36,8 @@ class NodeCoords
 			return false;
 		}
 
-		int getX() { return x; }
-		int getY() { return y; }
+		int getX() const { return x; }
+		int getY() const { return y; }
 
 	private:
 		int x, y;
@@ -47,12 +47,12 @@ class NodeCoords
 class ImportantInfo
 {
 	public:
-		ImportantInfo::ImportantInfo()
+		ImportantInfo()
 		{
 			playerOnGoal = false;
 		}
 
-		void useClosestGoal(NodeCoords &current)
+		void useClosestGoal(const NodeCoords &current)
 		{
 			if (goals.size() == 0)
 				return;
@@ -77,12 +77,12 @@ class ImportantInfo
 		void setPlayerOnGoal(bool var) { playerOnGoal = var; }
 		void setPlayer(NodeCoords player) { this->player = player;}
 		void addGoal(NodeCoords goal) { goals.push_back(goal); }
-		int getPlayerX() { return player.getX(); }
-		int getPlayerY() { return player.getY(); }
-		NodeCoords getPlayer() { return player; }
-		NodeCoords getGoal() { return goal; }
-		bool getPlayerOnGoal() { return playerOnGoal; }
-		int getGoalCount() { return goals.size(); }
+		int getPlayerX() const { return player.getX(); }
+		int getPlayerY() const { return player.getY(); }
+		NodeCoords getPlayer() const { return player; }
+		NodeCoords getGoal() const { return goal; }
+		bool getPlayerOnGoal() const { return playerOnGoal; }
+		int getGoalCount() const { return goals.size(); }
 	private:
 		NodeCoords player;
 		NodeCoords goal;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	//check if the player or a box was found on the goal
 	if (info.getPlayerOnGoal())
 	{
-		std::cout << std::endl;
+		std::cout << "" << std::endl;
 		return 0;
 	}
 	else if (info.getGoalCount() == 0)
@@ -139,14 +139,14 @@ int min_element_index(std::vector<int> vec)
 
 
 
-int calcManhattan(NodeCoords &node1, NodeCoords &node2)
+int calcManhattan(const NodeCoords &node1, const NodeCoords &node2)
 {
 	return abs(node1.getX() - node2.getX()) + abs(node1.getY() - node2.getY());
 }
 
 
 
-int calcScore(NodeCoords &coords, NodeCoords &player, NodeCoords &goal)
+int calcScore(const NodeCoords &coords, const NodeCoords &player, const NodeCoords &goal)
 {
 	int g, h;
 	g = calcManhattan(coords, player);
@@ -257,7 +257,8 @@ std::string Astar(std::vector<std::vector<char>> map, ImportantInfo &info)
 			//what happens if it is contained in open 
 			if (neighbour[i]->isContained(closedCoordinates)
 				|| map[neighbour[i]->getX()][neighbour[i]->getY()] == '#'
-				|| map[neighbour[i]->getX()][neighbour[i]->getY()] == '$')
+				|| map[neighbour[i]->getX()][neighbour[i]->getY()] == '$'
+				|| map[neighbour[i]->getX()][neighbour[i]->getY()] == '*')
 				continue;
 
 			openCoordinates.push_back(neighbour[i]);
